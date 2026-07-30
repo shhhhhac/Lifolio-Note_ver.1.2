@@ -3170,3 +3170,62 @@ body {
     margin-top: 0;
 
 }
+/* ==========================================
+   Lifolio Note — Month Heading Final Fix
+========================================== */
+
+
+/* MONTH */
+
+.month-heading .eyebrow,
+.month-usage-heading .eyebrow {
+
+    color: var(--primary-dark);
+
+    font-size: .62rem;
+
+    font-weight: 800;
+
+    letter-spacing: .14em;
+
+}
+
+
+/* 月間記録 / 7月の時間の使い方 */
+
+.month-heading h2,
+.month-usage-heading h3 {
+
+    color: var(--text);
+
+    font-size: 1.12rem;
+
+    font-weight: 700;
+
+    letter-spacing: -.02em;
+
+}
+
+
+/* THIS MONTH */
+
+.month-total-label {
+
+    color: var(--primary-dark);
+
+}
+
+
+.month-total-time strong {
+
+    color: var(--text);
+
+}
+
+
+.month-total-time span,
+.month-total-card p {
+
+    color: var(--text-sub);
+
+}

@@ -2746,15 +2746,36 @@ body {
 }
 
 
-.month-usage-heading h3 {
-    margin: 6px 0 0;
+/* ==========================================
+   Month Usage Heading Fix
+========================================== */
 
-    font-size: 20px;
-    line-height: 1.4;
+.month-usage-heading .eyebrow {
 
-    color: #193541;
+    color: var(--primary-dark);
+
+    font-size: .62rem;
+
+    font-weight:800;
+
+    letter-spacing:.14em;
+
 }
 
+
+.month-usage-heading h3 {
+
+    margin-top:0;
+
+    font-size:1.12rem;
+
+    font-weight:700;
+
+    color:var(--text);
+
+    letter-spacing:-.02em;
+
+}
 
 /* ---------- Tubes ---------- */
 

@@ -9,7 +9,6 @@
 ========================================== */
 
 const STORAGE_KEY = "lifolio_note_data";
-
 const OLD_STORAGE_KEY = "project_aibou_data";
 
 
@@ -65,7 +64,7 @@ const DEFAULT_CATEGORIES = [
 
 
 /* ==========================================
-   State
+   App State
 ========================================== */
 
 let appData = {
@@ -76,7 +75,8 @@ let appData = {
 
     currentActivity: null,
 
-    selectedDate: getDateKey(new Date()),
+    selectedDate:
+        getDateKey(new Date()),
 
     deletedBackup: null
 
@@ -89,8 +89,11 @@ let editingCategoryId = null;
 
 
 /* ==========================================
-   DOM
+   DOM Elements
 ========================================== */
+
+
+// Date
 
 const dateLabel =
     document.getElementById("dateLabel");
@@ -107,6 +110,9 @@ const nextDate =
 const todayButton =
     document.getElementById("todayButton");
 
+
+// Summary
+
 const totalTime =
     document.getElementById("totalTime");
 
@@ -116,11 +122,17 @@ const recordCount =
 const chartTotal =
     document.getElementById("chartTotal");
 
+
+// Chart
+
 const chart =
     document.getElementById("timeChart");
 
 const chartLegend =
     document.getElementById("chartLegend");
+
+
+// Timeline
 
 const timeline =
     document.getElementById("timeline");
@@ -128,15 +140,23 @@ const timeline =
 const timelineCount =
     document.getElementById("timelineCount");
 
-const weeklyRecord =
-    document.getElementById("weeklyRecord");
+
+// Monthly
 
 const monthlyCalendar =
     document.getElementById("monthlyCalendar");
 
-
 const monthlyRanking =
     document.getElementById("monthlyRanking");
+
+
+// Weekly
+
+const weeklyRecord =
+    document.getElementById("weeklyRecord");
+
+
+// Timer
 
 const categorySelect =
     document.getElementById("categorySelect");
@@ -146,6 +166,7 @@ const startButton =
 
 const stopButton =
     document.getElementById("stopButton");
+
 
 const currentEmpty =
     document.getElementById("currentEmpty");
@@ -168,13 +189,18 @@ const startTime =
 const elapsedTime =
     document.getElementById("elapsedTime");
 
+
+// Undo
+
 const undoButton =
     document.getElementById("undoButton");
+
 
 
 /* ==========================================
    Modal DOM
 ========================================== */
+
 
 const categoryModal =
     document.getElementById("categoryModal");
@@ -182,11 +208,14 @@ const categoryModal =
 const categoryList =
     document.getElementById("categoryList");
 
+
 const editModal =
     document.getElementById("editModal");
 
+
 const categoryEditModal =
     document.getElementById("categoryEditModal");
+
 
 const editCategory =
     document.getElementById("editCategory");
@@ -197,47 +226,69 @@ const editStart =
 const editEnd =
     document.getElementById("editEnd");
 
+
 const categoryEmoji =
     document.getElementById("categoryEmoji");
 
 const categoryName =
     document.getElementById("categoryName");
 
+
 const categoryEditTitle =
     document.getElementById("categoryEditTitle");
 
+
 const deleteCategoryButton =
     document.getElementById("deleteCategoryButton");
+
 
 
 /* ==========================================
    Date Helpers
 ========================================== */
 
+
 function getDateKey(date) {
 
-    const d = new Date(date);
+    const d =
+        new Date(date);
+
 
     const year =
         d.getFullYear();
 
+
     const month =
-        String(d.getMonth() + 1)
-            .padStart(2, "0");
+        String(
+            d.getMonth() + 1
+        )
+        .padStart(2,"0");
+
 
     const day =
-        String(d.getDate())
-            .padStart(2, "0");
+        String(
+            d.getDate()
+        )
+        .padStart(2,"0");
+
 
     return `${year}-${month}-${day}`;
 
 }
 
 
+
 function dateFromKey(key) {
 
-    const [year, month, day] =
-        key.split("-").map(Number);
+    const [
+        year,
+        month,
+        day
+    ] =
+        key
+        .split("-")
+        .map(Number);
+
 
     return new Date(
         year,
@@ -248,40 +299,50 @@ function dateFromKey(key) {
 }
 
 
+
 function changeDate(amount) {
 
     const date =
-        dateFromKey(appData.selectedDate);
+        dateFromKey(
+            appData.selectedDate
+        );
+
 
     date.setDate(
         date.getDate() + amount
     );
 
+
     appData.selectedDate =
         getDateKey(date);
+
 
     renderAll();
 
 }
 
 
+
 /* ==========================================
-   Format
+   Format Helpers
 ========================================== */
+
 
 function formatDate(date) {
 
     return new Intl.DateTimeFormat(
         "ja-JP",
         {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            weekday: "short"
+            year:"numeric",
+            month:"long",
+            day:"numeric",
+            weekday:"short"
         }
-    ).format(date);
+    )
+    .format(date);
 
 }
+
 
 
 function formatTime(dateString) {
@@ -290,76 +351,179 @@ function formatTime(dateString) {
         .toLocaleTimeString(
             "ja-JP",
             {
-                hour: "2-digit",
-                minute: "2-digit"
+                hour:"2-digit",
+                minute:"2-digit"
             }
         );
 
 }
 
 
+
 function formatDuration(ms) {
 
-    if (!ms || ms < 0)
+    if(!ms || ms < 0)
         return "00:00:00";
 
+
     const total =
-        Math.floor(ms / 1000);
+        Math.floor(
+            ms / 1000
+        );
+
 
     const hours =
-        Math.floor(total / 3600);
+        Math.floor(
+            total / 3600
+        );
+
 
     const minutes =
         Math.floor(
             (total % 3600) / 60
         );
 
+
     const seconds =
         total % 60;
 
+
     return [
 
-        String(hours).padStart(2, "0"),
+        String(hours).padStart(2,"0"),
 
-        String(minutes).padStart(2, "0"),
+        String(minutes).padStart(2,"0"),
 
-        String(seconds).padStart(2, "0")
+        String(seconds).padStart(2,"0")
 
-    ].join(":");
+    ]
+    .join(":");
 
 }
 
 
-function formatShortDuration(ms) {
 
-    if (!ms || ms < 0)
+function formatShortDuration(ms){
+
+    if(!ms || ms < 0)
         return "0分";
 
-    const minutes =
-        Math.floor(ms / 60000);
 
-    if (minutes < 60)
+    const minutes =
+        Math.floor(
+            ms / 60000
+        );
+
+
+    if(minutes < 60){
+
         return `${minutes}分`;
 
+    }
+
+
     const hours =
-        Math.floor(minutes / 60);
+        Math.floor(
+            minutes / 60
+        );
+
 
     const remaining =
         minutes % 60;
 
-    if (remaining === 0)
+
+    if(remaining === 0){
+
         return `${hours}時間`;
+
+    }
+
 
     return `${hours}時間${remaining}分`;
 
 }
 
 
+
+/* ==========================================
+   Data Helpers
+   (MONTH準備)
+========================================== */
+
+
+function getSelectedItems(){
+
+    return appData.timeline
+        .filter(item =>
+            getDateKey(item.start)
+            === appData.selectedDate
+        );
+
+}
+
+
+
+function getMonthItems(year, month){
+
+    return appData.timeline.filter(item=>{
+
+        const date =
+            new Date(item.start);
+
+
+        return (
+            date.getFullYear()
+            === year
+            &&
+            date.getMonth()
+            === month
+        );
+
+    });
+
+}
+
+
+
+function getDurationForItem(item){
+
+    if(!item.end)
+        return 0;
+
+
+    return (
+        new Date(item.end)
+        -
+        new Date(item.start)
+    );
+
+}
+
+
+
+function getDayTotal(dateKey){
+
+    return appData.timeline
+        .filter(item=>
+            getDateKey(item.start)
+            === dateKey
+            &&
+            item.end
+        )
+        .reduce(
+            (total,item)=>
+                total +
+                getDurationForItem(item),
+            0
+        );
+
+}
 /* ==========================================
    Storage
 ========================================== */
 
-function saveData() {
+
+function saveData(){
 
     localStorage.setItem(
         STORAGE_KEY,
@@ -369,7 +533,8 @@ function saveData() {
 }
 
 
-function loadData() {
+
+function loadData(){
 
     const saved =
         localStorage.getItem(
@@ -377,12 +542,13 @@ function loadData() {
         );
 
 
-    if (saved) {
+    if(saved){
 
-        try {
+        try{
 
             const parsed =
                 JSON.parse(saved);
+
 
             appData = {
 
@@ -391,7 +557,8 @@ function loadData() {
                     DEFAULT_CATEGORIES,
 
                 timeline:
-                    parsed.timeline || [],
+                    parsed.timeline ||
+                    [],
 
                 currentActivity:
                     parsed.currentActivity ||
@@ -407,9 +574,11 @@ function loadData() {
 
             };
 
+
             return;
 
-        } catch (error) {
+
+        }catch(error){
 
             console.error(
                 "データ読み込みエラー",
@@ -421,9 +590,7 @@ function loadData() {
     }
 
 
-    /* ----------------------------------
-       旧Project相棒データから移行
-    ---------------------------------- */
+    /* 旧Project相棒データ移行 */
 
     const oldSaved =
         localStorage.getItem(
@@ -431,69 +598,51 @@ function loadData() {
         );
 
 
-    if (oldSaved) {
+    if(oldSaved){
 
-        try {
+        try{
 
             const old =
                 JSON.parse(oldSaved);
 
-            const migratedTimeline =
-                (old.timeline || [])
-                    .map(item => {
-
-                        const parts =
-                            String(item.name || "その他")
-                                .trim()
-                                .split(" ");
-
-                        const emoji =
-                            parts.length > 1
-                                ? parts[0]
-                                : "➕";
-
-                        const name =
-                            parts.length > 1
-                                ? parts.slice(1).join(" ")
-                                : parts[0];
-
-                        return {
-
-                            id:
-                                crypto.randomUUID(),
-
-                            categoryId:
-                                "other",
-
-                            name:
-                                name || "その他",
-
-                            emoji:
-                                emoji || "➕",
-
-                            start:
-                                item.start,
-
-                            end:
-                                item.end
-
-                        };
-
-                    });
-
 
             appData.timeline =
-                migratedTimeline;
+                (old.timeline || [])
+                .map(item=>({
+
+                    id:
+                        crypto.randomUUID(),
+
+                    categoryId:
+                        "other",
+
+                    name:
+                        item.name || "その他",
+
+                    emoji:
+                        "➕",
+
+                    start:
+                        item.start,
+
+                    end:
+                        item.end
+
+                }));
+
 
             appData.currentActivity =
-                old.currentActivity || null;
+                old.currentActivity ||
+                null;
+
 
             saveData();
 
-        } catch (error) {
+
+        }catch(error){
 
             console.error(
-                "旧データ移行エラー",
+                "移行エラー",
                 error
             );
 
@@ -504,11 +653,14 @@ function loadData() {
 }
 
 
+
+
 /* ==========================================
    Category
 ========================================== */
 
-function getCategory(id) {
+
+function getCategory(id){
 
     return appData.categories.find(
         category =>
@@ -518,444 +670,67 @@ function getCategory(id) {
 }
 
 
-function renderCategorySelect() {
+
+function renderCategorySelect(){
 
     categorySelect.innerHTML = "";
 
-    appData.categories.forEach(
-        category => {
 
-            const option =
-                document.createElement("option");
+    appData.categories.forEach(category=>{
 
-            option.value =
-                category.id;
+        const option =
+            document.createElement("option");
 
-            option.textContent =
-                `${category.emoji} ${category.name}`;
 
-            categorySelect.appendChild(
-                option
-            );
+        option.value =
+            category.id;
 
-        }
-    );
+
+        option.textContent =
+            `${category.emoji} ${category.name}`;
+
+
+        categorySelect.appendChild(option);
+
+    });
 
 
     editCategory.innerHTML = "";
 
-    appData.categories.forEach(
-        category => {
 
-            const option =
-                document.createElement("option");
+    appData.categories.forEach(category=>{
 
-            option.value =
-                category.id;
-
-            option.textContent =
-                `${category.emoji} ${category.name}`;
-
-            editCategory.appendChild(
-                option
-            );
-
-        }
-    );
-
-}
+        const option =
+            document.createElement("option");
 
 
-function openCategoryModal() {
+        option.value =
+            category.id;
 
-    renderCategoryList();
 
-    categoryModal.classList.remove(
-        "hidden"
-    );
+        option.textContent =
+            `${category.emoji} ${category.name}`;
+
+
+        editCategory.appendChild(option);
+
+    });
 
 }
 
 
-function closeCategoryModal() {
 
-    categoryModal.classList.add(
-        "hidden"
-    );
-
-}
-
-
-function renderCategoryList() {
-
-    categoryList.innerHTML = "";
-
-    appData.categories.forEach(
-        category => {
-
-            const item =
-                document.createElement("div");
-
-            item.className =
-                "category-item";
-
-
-            const info =
-                document.createElement("div");
-
-            info.className =
-                "category-info";
-
-
-            const emoji =
-                document.createElement("span");
-
-            emoji.className =
-                "emoji";
-
-            emoji.textContent =
-                category.emoji;
-
-
-            const name =
-                document.createElement("strong");
-
-            name.textContent =
-                category.name;
-
-
-            info.append(
-                emoji,
-                name
-            );
-
-
-            const actions =
-                document.createElement("div");
-
-            actions.className =
-                "category-actions";
-
-
-            const edit =
-                document.createElement("button");
-
-            edit.className =
-                "category-action";
-
-            edit.textContent =
-                "✏️";
-
-            edit.addEventListener(
-                "click",
-                () =>
-                    openCategoryEditor(
-                        category.id
-                    )
-            );
-
-
-            const del =
-                document.createElement("button");
-
-            del.className =
-                "category-action";
-
-            del.textContent =
-                "🗑️";
-
-            del.addEventListener(
-                "click",
-                () =>
-                    deleteCategory(
-                        category.id
-                    )
-            );
-
-
-            actions.append(
-                edit,
-                del
-            );
-
-
-            item.append(
-                info,
-                actions
-            );
-
-
-            categoryList.appendChild(
-                item
-            );
-
-        }
-    );
-
-}
-
-
-function openCategoryEditor(id = null) {
-
-    editingCategoryId = id;
-
-    if (id) {
-
-        const category =
-            getCategory(id);
-
-        categoryEditTitle.textContent =
-            "カテゴリを編集";
-
-        categoryEmoji.value =
-            category.emoji;
-
-        categoryName.value =
-            category.name;
-
-        deleteCategoryButton.classList
-            .remove("hidden");
-
-    } else {
-
-        categoryEditTitle.textContent =
-            "カテゴリを追加";
-
-        categoryEmoji.value =
-            "";
-
-        categoryName.value =
-            "";
-
-        deleteCategoryButton.classList
-            .add("hidden");
-
-    }
-
-
-    categoryEditModal.classList.remove(
-        "hidden"
-    );
-
-}
-
-
-function closeCategoryEditor() {
-
-    categoryEditModal.classList.add(
-        "hidden"
-    );
-
-    editingCategoryId = null;
-
-}
-
-
-function saveCategory() {
-
-    const emoji =
-        categoryEmoji.value.trim() || "➕";
-
-    const name =
-        categoryName.value.trim();
-
-
-    if (!name) {
-
-        alert(
-            "カテゴリ名を入力してください。"
-        );
-
-        return;
-
-    }
-
-
-    if (editingCategoryId) {
-
-        const category =
-            getCategory(
-                editingCategoryId
-            );
-
-        category.emoji =
-            emoji;
-
-        category.name =
-            name;
-
-
-        /* 過去の記録にも反映 */
-
-        appData.timeline.forEach(
-            item => {
-
-                if (
-                    item.categoryId ===
-                    editingCategoryId
-                ) {
-
-                    item.emoji =
-                        emoji;
-
-                    item.name =
-                        name;
-
-                }
-
-            }
-        );
-
-
-    } else {
-
-        appData.categories.push({
-
-            id:
-                "category_" +
-                Date.now(),
-
-            emoji,
-
-            name
-
-        });
-
-    }
-
-
-    saveData();
-
-    renderAll();
-
-    closeCategoryEditor();
-
-    renderCategoryList();
-
-}
-
-
-function deleteCategory(id) {
-
-    if (
-        appData.categories.length <= 1
-    ) {
-
-        alert(
-            "カテゴリは最低1つ必要です。"
-        );
-
-        return;
-
-    }
-
-
-    const category =
-        getCategory(id);
-
-
-    const hasRecords =
-        appData.timeline.some(
-            item =>
-                item.categoryId === id
-        );
-
-
-    let message =
-        `「${category.name}」を削除しますか？`;
-
-
-    if (hasRecords) {
-
-        message +=
-            "\nこのカテゴリの過去の記録は「その他」として残ります。";
-
-    }
-
-
-    if (!confirm(message))
-        return;
-
-
-    appData.timeline.forEach(
-        item => {
-
-            if (
-                item.categoryId === id
-            ) {
-
-                const fallback =
-                    appData.categories.find(
-                        c => c.id !== id
-                    );
-
-                item.categoryId =
-                    fallback.id;
-
-                item.name =
-                    fallback.name;
-
-                item.emoji =
-                    fallback.emoji;
-
-            }
-
-        }
-    );
-
-
-    appData.categories =
-        appData.categories.filter(
-            category =>
-                category.id !== id
-        );
-
-
-    saveData();
-
-    renderAll();
-
-    renderCategoryList();
-
-}
 
 
 /* ==========================================
    Timeline
 ========================================== */
 
-function getSelectedItems() {
 
-    return appData.timeline
-        .filter(item =>
-            getDateKey(item.start) ===
-            appData.selectedDate
-        )
-        .sort(
-            (a, b) =>
-                new Date(a.start) -
-                new Date(b.start)
-        );
+function renderTimeline(){
 
-}
+    timeline.innerHTML="";
 
-
-function getDurationForItem(item) {
-
-    if (!item.end)
-        return 0;
-
-    return (
-        new Date(item.end) -
-        new Date(item.start)
-    );
-
-}
-
-
-function renderTimeline() {
-
-    timeline.innerHTML = "";
 
     const items =
         getSelectedItems();
@@ -964,181 +739,108 @@ function renderTimeline() {
     timelineCount.textContent =
         `${items.length}件`;
 
+
     recordCount.textContent =
         items.length;
 
 
-    if (!items.length) {
+
+    if(!items.length){
 
         const empty =
             document.createElement("div");
 
+
         empty.className =
             "empty";
+
 
         empty.textContent =
             "この日の記録はまだありません。";
 
-        timeline.appendChild(
-            empty
-        );
+
+        timeline.appendChild(empty);
 
         return;
 
     }
 
 
-    items.forEach(
-        item => {
 
-            const element =
-                document.createElement("div");
-
-            element.className =
-                "timeline-item";
+    items.forEach(item=>{
 
 
-            const dot =
-                document.createElement("div");
-
-            dot.className =
-                "timeline-dot";
+        const element =
+            document.createElement("div");
 
 
-            const top =
-                document.createElement("div");
-
-            top.className =
-                "timeline-top";
+        element.className =
+            "timeline-item";
 
 
-            const category =
-                document.createElement("div");
 
-            category.className =
-                "timeline-category";
+        const title =
+            document.createElement("div");
 
 
-            const emoji =
-                document.createElement("span");
-
-            emoji.textContent =
-                item.emoji;
+        title.textContent =
+            `${item.emoji} ${item.name}`;
 
 
-            const name =
-                document.createElement("strong");
 
-            name.textContent =
-                item.name;
+        const time =
+            document.createElement("div");
 
 
-            category.append(
-                emoji,
-                name
-            );
+        time.textContent =
+            item.end
+            ?
+            `${formatTime(item.start)}〜${formatTime(item.end)}`
+            :
+            "記録中";
 
 
-            const edit =
-                document.createElement("button");
 
-            edit.className =
-                "timeline-edit";
-
-            edit.textContent =
-                "✏️";
-
-            edit.addEventListener(
-                "click",
-                () =>
-                    openEditModal(item.id)
-            );
+        const duration =
+            document.createElement("span");
 
 
-            top.append(
-                category,
-                edit
-            );
+        duration.textContent =
+            item.end
+            ?
+            formatShortDuration(
+                getDurationForItem(item)
+            )
+            :
+            "進行中";
 
 
-            const time =
-                document.createElement("div");
 
-            time.className =
-                "timeline-time";
-
-
-            if (item.end) {
-
-                time.textContent =
-                    `${formatTime(item.start)} 〜 ${formatTime(item.end)}`;
-
-            } else {
-
-                time.textContent =
-                    `${formatTime(item.start)} 〜 記録中`;
-
-            }
-
-
-            const duration =
-                document.createElement("span");
-
-            duration.className =
-                "timeline-duration";
-
-            duration.textContent =
-                item.end
-                    ? formatShortDuration(
-                        getDurationForItem(item)
-                    )
-                    : "進行中";
-
-
-            element.append(
-                dot,
-                top,
-                time,
-                duration
-            );
-
-
-            timeline.appendChild(
-                element
-            );
-
-        }
-    );
-
-}
-
-
-/* ==========================================
-   Total Time
-========================================== */
-
-function getDayTotal(dateKey) {
-
-    const items =
-        appData.timeline.filter(
-            item =>
-                getDateKey(item.start) ===
-                dateKey &&
-                item.end
+        element.append(
+            title,
+            time,
+            duration
         );
 
 
-    return items.reduce(
-        (total, item) =>
-            total +
-            getDurationForItem(item),
-        0
-    );
+        timeline.appendChild(element);
+
+
+    });
+
 
 }
 
 
-function getDisplayTotal() {
+
+
+
+/* ==========================================
+   Summary
+========================================== */
+
+
+function getDisplayTotal(){
 
     let total =
         getDayTotal(
@@ -1146,16 +848,17 @@ function getDisplayTotal() {
         );
 
 
-    /* 今日なら進行中も加える */
-
-    if (
-        appData.selectedDate ===
-        getDateKey(new Date()) &&
+    if(
+        appData.selectedDate
+        ===
+        getDateKey(new Date())
+        &&
         appData.currentActivity
-    ) {
+    ){
 
         total +=
-            Date.now() -
+            Date.now()
+            -
             new Date(
                 appData.currentActivity.start
             );
@@ -1168,7 +871,8 @@ function getDisplayTotal() {
 }
 
 
-function renderSummary() {
+
+function renderSummary(){
 
     const total =
         getDisplayTotal();
@@ -1177,56 +881,50 @@ function renderSummary() {
     totalTime.textContent =
         formatShortDuration(total);
 
+
     chartTotal.textContent =
         formatShortDuration(total);
 
 }
 
 
+
+
+
 /* ==========================================
-   Current Activity
+   Timer
 ========================================== */
 
-function updateCurrentActivity() {
 
-    if (!appData.currentActivity) {
+function updateCurrentActivity(){
 
-        currentEmpty.classList
-            .remove("hidden");
+    if(!appData.currentActivity){
 
-        currentRunning.classList
-            .add("hidden");
+        currentEmpty.classList.remove("hidden");
+
+        currentRunning.classList.add("hidden");
 
         currentStatus.textContent =
             "待機中";
-
-        currentStatus.classList
-            .remove("active");
 
         return;
 
     }
 
 
-    currentEmpty.classList
-        .add("hidden");
 
-    currentRunning.classList
-        .remove("hidden");
+    currentEmpty.classList.add("hidden");
 
-
-    currentStatus.textContent =
-        "記録中";
-
-    currentStatus.classList
-        .add("active");
+    currentRunning.classList.remove("hidden");
 
 
     currentEmoji.textContent =
         appData.currentActivity.emoji;
 
+
     currentName.textContent =
         appData.currentActivity.name;
+
 
     startTime.textContent =
         formatTime(
@@ -1239,9 +937,11 @@ function updateCurrentActivity() {
 }
 
 
-function updateElapsed() {
 
-    if (!appData.currentActivity) {
+
+function updateElapsed(){
+
+    if(!appData.currentActivity){
 
         elapsedTime.textContent =
             "00:00:00";
@@ -1252,7 +952,8 @@ function updateElapsed() {
 
 
     const elapsed =
-        Date.now() -
+        Date.now()
+        -
         new Date(
             appData.currentActivity.start
         );
@@ -1261,18 +962,17 @@ function updateElapsed() {
     elapsedTime.textContent =
         formatDuration(elapsed);
 
-    renderSummary();
 
-    renderChart();
+    renderSummary();
 
 }
 
 
-/* ==========================================
-   Start / Stop
-========================================== */
 
-function startActivity() {
+
+
+
+function startActivity(){
 
     const category =
         getCategory(
@@ -1280,17 +980,17 @@ function startActivity() {
         );
 
 
-    if (!category)
+    if(!category)
         return;
 
 
-    /* 既に記録中なら終了 */
 
-    if (appData.currentActivity) {
+    if(appData.currentActivity){
 
         endCurrentActivity();
 
     }
+
 
 
     appData.currentActivity = {
@@ -1310,8 +1010,7 @@ function startActivity() {
         start:
             new Date().toISOString(),
 
-        end:
-            null
+        end:null
 
     };
 
@@ -1323,9 +1022,12 @@ function startActivity() {
 }
 
 
-function endCurrentActivity() {
 
-    if (!appData.currentActivity)
+
+
+function endCurrentActivity(){
+
+    if(!appData.currentActivity)
         return;
 
 
@@ -1337,9 +1039,7 @@ function endCurrentActivity() {
         new Date().toISOString();
 
 
-    appData.timeline.push(
-        activity
-    );
+    appData.timeline.push(activity);
 
 
     appData.currentActivity =
@@ -1353,105 +1053,21 @@ function endCurrentActivity() {
 }
 
 
+
+
+
 /* ==========================================
-   Edit Record
+   Monthly Base
 ========================================== */
 
-function openEditModal(id) {
 
-    const item =
-        appData.timeline.find(
-            record =>
-                record.id === id
-        );
+function renderMonthlyCalendar(){
 
-
-    if (!item)
+    if(!monthlyCalendar)
         return;
 
 
-    editingRecordId =
-        id;
-
-
-    renderCategorySelect();
-
-
-    editCategory.value =
-        item.categoryId;
-
-
-    const start =
-        new Date(item.start);
-
-
-    const end =
-        item.end
-            ? new Date(item.end)
-            : new Date();
-
-
-    editStart.value =
-        timeForInput(start);
-
-
-    editEnd.value =
-        timeForInput(end);
-
-
-    editModal.classList.remove(
-        "hidden"
-    );
-
-}
-
-
-function closeEditModal() {
-
-    editModal.classList.add(
-        "hidden"
-    );
-
-    editingRecordId = null;
-
-}
-
-
-function timeForInput(date) {
-
-    return [
-
-        String(
-            date.getHours()
-        ).padStart(2, "0"),
-
-        String(
-            date.getMinutes()
-        ).padStart(2, "0")
-
-    ].join(":");
-
-}
-
-
-function saveEditedRecord() {
-
-    const item =
-        appData.timeline.find(
-            record =>
-                record.id ===
-                editingRecordId
-        );
-
-
-    if (!item)
-        return;
-
-
-    const category =
-        getCategory(
-            editCategory.value
-        );
+    monthlyCalendar.innerHTML="";
 
 
     const date =
@@ -1460,687 +1076,21 @@ function saveEditedRecord() {
         );
 
 
-    const [startHour, startMinute] =
-        editStart.value
-            .split(":")
-            .map(Number);
-
-
-    const [endHour, endMinute] =
-        editEnd.value
-            .split(":")
-            .map(Number);
-
-
-    if (!editStart.value ||
-        !editEnd.value) {
-
-        alert(
-            "開始と終了の時刻を入力してください。"
-        );
-
-        return;
-
-    }
-
-
-    const startDate =
-        new Date(date);
-
-    startDate.setHours(
-        startHour,
-        startMinute,
-        0,
-        0
-    );
-
-
-    const endDate =
-        new Date(date);
-
-    endDate.setHours(
-        endHour,
-        endMinute,
-        0,
-        0
-    );
-
-
-    if (endDate <= startDate) {
-
-        alert(
-            "終了時刻は開始時刻より後にしてください。"
-        );
-
-        return;
-
-    }
-
-
-    item.categoryId =
-        category.id;
-
-    item.name =
-        category.name;
-
-    item.emoji =
-        category.emoji;
-
-    item.start =
-        startDate.toISOString();
-
-    item.end =
-        endDate.toISOString();
-
-
-    saveData();
-
-    closeEditModal();
-
-    renderAll();
-
-}
-
-
-/* ==========================================
-   Delete Record
-========================================== */
-
-function deleteRecord(id) {
-
-    const index =
-        appData.timeline.findIndex(
-            item =>
-                item.id === id
-        );
-
-
-    if (index === -1)
-        return;
-
-
-    const item =
-        appData.timeline[index];
-
-
-    appData.deletedBackup = {
-
-        item:
-            structuredClone(item),
-
-        index
-
-    };
-
-
-    appData.timeline.splice(
-        index,
-        1
-    );
-
-
-    saveData();
-
-    closeEditModal();
-
-    renderAll();
-
-}
-
-
-function undoDelete() {
-
-    if (!appData.deletedBackup)
-        return;
-
-
-    const backup =
-        appData.deletedBackup;
-
-
-    appData.timeline.splice(
-        backup.index,
-        0,
-        backup.item
-    );
-
-
-    appData.deletedBackup =
-        null;
-
-
-    saveData();
-
-    renderAll();
-
-}
-
-
-function renderUndoButton() {
-
-    if (appData.deletedBackup) {
-
-        undoButton.classList
-            .remove("hidden");
-
-    } else {
-
-        undoButton.classList
-            .add("hidden");
-
-    }
-
-}
-
-
-/* ==========================================
-   Chart
-========================================== */
-
-const CHART_COLORS = [
-
-    "#63c7eb",
-    "#8bd8ef",
-    "#46afd8",
-    "#a7e4f4",
-    "#3c9fc7",
-    "#bdebf7",
-    "#79bdd6",
-    "#d2f2fa"
-
-];
-
-
-function renderChart() {
-
-    const canvas =
-        chart;
-
-    const ctx =
-        canvas.getContext("2d");
-
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    const items =
-        getSelectedItems();
-
-
-    const categoryTotals = {};
-
-
-    items.forEach(
-        item => {
-
-            const duration =
-                getDurationForItem(item);
-
-
-            if (!categoryTotals[item.categoryId]) {
-
-                categoryTotals[item.categoryId] =
-                    0;
-
-            }
-
-
-            categoryTotals[item.categoryId] +=
-                duration;
-
-        }
-    );
-
-
-    const entries =
-        Object.entries(
-            categoryTotals
-        ).filter(
-            ([, value]) =>
-                value > 0
-        );
-
-
-    const total =
-        entries.reduce(
-            (sum, [, value]) =>
-                sum + value,
-            0
-        );
-
-
-    const centerX = 110;
-    const centerY = 110;
-
-    const radius = 84;
-    const lineWidth = 26;
-
-
-    if (!entries.length) {
-
-        ctx.beginPath();
-
-        ctx.arc(
-            centerX,
-            centerY,
-            radius,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.strokeStyle =
-            "#eaf3f6";
-
-        ctx.lineWidth =
-            lineWidth;
-
-        ctx.stroke();
-
-        renderChartLegend([]);
-
-        return;
-
-    }
-
-
-    let angle =
-        -Math.PI / 2;
-
-
-    entries.forEach(
-        ([categoryId, value], index) => {
-
-            const category =
-                getCategory(categoryId);
-
-
-            const slice =
-                (value / total) *
-                Math.PI *
-                2;
-
-
-            ctx.beginPath();
-
-            ctx.arc(
-                centerX,
-                centerY,
-                radius,
-                angle,
-                angle + slice
-            );
-
-            ctx.strokeStyle =
-                CHART_COLORS[
-                    index %
-                    CHART_COLORS.length
-                ];
-
-            ctx.lineWidth =
-                lineWidth;
-
-            ctx.lineCap =
-                "round";
-
-            ctx.stroke();
-
-
-            angle += slice;
-
-        }
-    );
-
-
-    renderChartLegend(entries);
-
-}
-
-
-function renderChartLegend(entries) {
-
-    chartLegend.innerHTML = "";
-
-
-    if (!entries.length) {
-
-        const empty =
-            document.createElement("div");
-
-        empty.className =
-            "empty";
-
-        empty.style.padding =
-            "5px";
-
-        empty.textContent =
-            "まだ記録がありません";
-
-        chartLegend.appendChild(
-            empty
-        );
-
-        return;
-
-    }
-
-
-    const total =
-        entries.reduce(
-            (sum, [, value]) =>
-                sum + value,
-            0
-        );
-
-
-    entries
-        .sort(
-            (a, b) =>
-                b[1] - a[1]
-        )
-        .forEach(
-            ([categoryId, value], index) => {
-
-                const category =
-                    getCategory(categoryId);
-
-
-                const item =
-                    document.createElement("div");
-
-                item.className =
-                    "legend-item";
-
-
-                const left =
-                    document.createElement("div");
-
-                left.className =
-                    "legend-left";
-
-
-                const dot =
-                    document.createElement("span");
-
-                dot.className =
-                    "legend-dot";
-
-                dot.style.background =
-                    CHART_COLORS[
-                        index %
-                        CHART_COLORS.length
-                    ];
-
-
-                const name =
-                    document.createElement("span");
-
-                name.className =
-                    "legend-name";
-
-                name.textContent =
-                    `${category?.emoji || "➕"} ${category?.name || "その他"}`;
-
-
-                const percent =
-                    Math.round(
-                        (value / total) *
-                        100
-                    );
-
-
-                const valueEl =
-                    document.createElement("span");
-
-                valueEl.className =
-                    "legend-value";
-
-                valueEl.textContent =
-                    `${percent}%`;
-
-
-                left.append(
-                    dot,
-                    name
-                );
-
-
-                item.append(
-                    left,
-                    valueEl
-                );
-
-
-                chartLegend.appendChild(
-                    item
-                );
-
-            }
-        );
-
-}
-
-
-/* ==========================================
-   Weekly
-========================================== */
-
-function renderWeekly() {
-
-    weeklyRecord.innerHTML = "";
-
-
-    const selected =
-        dateFromKey(
-            appData.selectedDate
-        );
-
-
-    const start =
-        new Date(selected);
-
-    const day =
-        start.getDay();
-
-    const diff =
-        day === 0
-            ? -6
-            : 1 - day;
-
-
-    start.setDate(
-        start.getDate() + diff
-    );
-
-
-    const days = [];
-
-
-    for (let i = 0; i < 7; i++) {
-
-        const date =
-            new Date(start);
-
-        date.setDate(
-            start.getDate() + i
-        );
-
-        days.push(date);
-
-    }
-
-
-    const totals =
-        days.map(
-            date =>
-                getDayTotal(
-                    getDateKey(date)
-                )
-        );
-
-
-    const max =
-        Math.max(
-            ...totals,
-            1
-        );
-
-
-    const weekNames =
-        [
-            "月",
-            "火",
-            "水",
-            "木",
-            "金",
-            "土",
-            "日"
-        ];
-
-
-    days.forEach(
-        (date, index) => {
-
-            const key =
-                getDateKey(date);
-
-
-            const total =
-                totals[index];
-
-
-            const item =
-                document.createElement("div");
-
-            item.className =
-                "week-day";
-
-
-            if (
-                key ===
-                appData.selectedDate
-            ) {
-
-                item.classList.add(
-                    "selected"
-                );
-
-            }
-
-
-            item.addEventListener(
-                "click",
-                () => {
-
-                    appData.selectedDate =
-                        key;
-
-                    renderAll();
-
-                }
-            );
-
-
-            const name =
-                document.createElement("div");
-
-            name.className =
-                "week-day-name";
-
-            name.textContent =
-                weekNames[index];
-
-
-            const number =
-                document.createElement("div");
-
-            number.className =
-                "week-day-number";
-
-            number.textContent =
-                date.getDate();
-
-
-            const bar =
-                document.createElement("div");
-
-            bar.className =
-                "week-bar";
-
-
-            const barInner =
-                document.createElement("div");
-
-            barInner.className =
-                "week-bar-inner";
-
-            barInner.style.width =
-                `${Math.round(
-                    (total / max) * 100
-                )}%`;
-
-
-            bar.appendChild(
-                barInner
-            );
-
-
-            const duration =
-                document.createElement("div");
-
-            duration.className =
-                "week-duration";
-
-            duration.textContent =
-                formatShortDuration(
-                    total
-                );
-
-
-            item.append(
-                name,
-                number,
-                bar,
-                duration
-            );
-
-
-            weeklyRecord.appendChild(
-                item
-            );
-
-        }
-    );
-
-}
-function renderMonthlyCalendar(){
-
-    monthlyCalendar.innerHTML = "";
-
-
-    const selected =
-        dateFromKey(
-            appData.selectedDate
-        );
-
-
     const year =
-        selected.getFullYear();
+        date.getFullYear();
 
 
     const month =
-        selected.getMonth();
+        date.getMonth();
+
 
 
     const title =
         document.createElement("h3");
 
+
     title.textContent =
-        `${year}年${month + 1}月`;
+        `${year}年${month+1}月`;
 
 
     monthlyCalendar.appendChild(title);
@@ -2151,95 +1101,29 @@ function renderMonthlyCalendar(){
         document.createElement("div");
 
 
-    grid.style.display =
-        "grid";
-
-    grid.style.gridTemplateColumns =
-        "repeat(7,1fr)";
-
-    grid.style.gap =
-        "6px";
+    grid.className =
+        "monthly-grid";
 
 
 
-    const first =
+    const days =
         new Date(
             year,
-            month,
-            1
-        );
-
-
-    const last =
-        new Date(
-            year,
-            month + 1,
+            month+1,
             0
-        );
-
-
-    // 月初まで空白
-    for(
-        let i = 0;
-        i < first.getDay();
-        i++
-    ){
-
-        grid.appendChild(
-            document.createElement("div")
-        );
-
-    }
+        )
+        .getDate();
 
 
 
-    for(
-        let day = 1;
-        day <= last.getDate();
-        day++
-    ){
+    for(let i=1;i<=days;i++){
 
         const cell =
             document.createElement("div");
 
 
         cell.textContent =
-            day;
-
-
-        cell.style.textAlign =
-            "center";
-
-        cell.style.padding =
-            "10px";
-
-
-        const key =
-            getDateKey(
-                new Date(
-                    year,
-                    month,
-                    day
-                )
-            );
-
-
-        const hasRecord =
-            appData.timeline.some(item =>
-                getDateKey(item.start)
-                === key
-            );
-
-
-        if(hasRecord){
-
-            cell.style.background =
-                "var(--primary-light)";
-
-            cell.style.borderRadius =
-                "50%";
-
-        }
+            i;
 
 
         grid.appendChild(cell);
@@ -2251,53 +1135,17 @@ function renderMonthlyCalendar(){
 
 }
 
-/* ==========================================
-   Date UI
-========================================== */
-
-function renderDate() {
-
-    const selected =
-        dateFromKey(
-            appData.selectedDate
-        );
 
 
-    const todayKey =
-        getDateKey(
-            new Date()
-        );
 
-
-    if (
-        appData.selectedDate ===
-        todayKey
-    ) {
-
-        dateLabel.textContent =
-            "TODAY";
-
-    } else {
-
-        dateLabel.textContent =
-            formatDate(selected)
-                .split(" ")
-                .pop();
-
-    }
-
-
-    dateText.textContent =
-        formatDate(selected);
-
-}
 
 
 /* ==========================================
    Render All
 ========================================== */
 
-function renderAll() {
+
+function renderAll(){
 
     renderDate();
 
@@ -2309,11 +1157,9 @@ function renderAll() {
 
     renderTimeline();
 
-    renderChart();
-
     renderWeekly();
 
-    renderMonthly();
+    renderMonthlyCalendar();
 
     renderUndoButton();
 
@@ -2322,27 +1168,72 @@ function renderAll() {
 }
 
 
+
+
+
+/* ==========================================
+   Date UI
+========================================== */
+
+
+function renderDate(){
+
+    const date =
+        dateFromKey(
+            appData.selectedDate
+        );
+
+
+    dateText.textContent =
+        formatDate(date);
+
+}
+
+
+
+
+/* ==========================================
+   Undo
+========================================== */
+
+
+function renderUndoButton(){
+
+    if(!undoButton)
+        return;
+
+
+    undoButton.classList.toggle(
+        "hidden",
+        !appData.deletedBackup
+    );
+
+}
+
+
+
+
+
 /* ==========================================
    Events
 ========================================== */
 
+
 prevDate.addEventListener(
     "click",
-    () =>
-        changeDate(-1)
+    ()=>changeDate(-1)
 );
 
 
 nextDate.addEventListener(
     "click",
-    () =>
-        changeDate(1)
+    ()=>changeDate(1)
 );
 
 
 todayButton.addEventListener(
     "click",
-    () => {
+    ()=>{
 
         appData.selectedDate =
             getDateKey(
@@ -2353,6 +1244,7 @@ todayButton.addEventListener(
 
     }
 );
+
 
 
 startButton.addEventListener(
@@ -2367,209 +1259,35 @@ stopButton.addEventListener(
 );
 
 
-undoButton.addEventListener(
-    "click",
-    undoDelete
-);
-
-
-document
-    .getElementById("manageCategoryButton")
-    .addEventListener(
-        "click",
-        openCategoryModal
-    );
-
-
-document
-    .getElementById("closeCategoryModal")
-    .addEventListener(
-        "click",
-        closeCategoryModal
-    );
-
-
-document
-    .getElementById("modalOverlay")
-    .addEventListener(
-        "click",
-        closeCategoryModal
-    );
-
-
-document
-    .getElementById("addCategoryButton")
-    .addEventListener(
-        "click",
-        () =>
-            openCategoryEditor()
-    );
-
-
-document
-    .getElementById("closeCategoryEditModal")
-    .addEventListener(
-        "click",
-        closeCategoryEditor
-    );
-
-
-document
-    .getElementById("categoryEditOverlay")
-    .addEventListener(
-        "click",
-        closeCategoryEditor
-    );
-
-
-document
-    .getElementById("saveCategoryButton")
-    .addEventListener(
-        "click",
-        saveCategory
-    );
-
-
-deleteCategoryButton.addEventListener(
-    "click",
-    () => {
-
-        if (editingCategoryId) {
-
-            deleteCategory(
-                editingCategoryId
-            );
-
-            closeCategoryEditor();
-
-        }
-
-    }
-);
-
-
-document
-    .getElementById("closeEditModal")
-    .addEventListener(
-        "click",
-        closeEditModal
-    );
-
-
-document
-    .getElementById("editOverlay")
-    .addEventListener(
-        "click",
-        closeEditModal
-    );
-
-
-document
-    .getElementById("saveEditButton")
-    .addEventListener(
-        "click",
-        saveEditedRecord
-    );
-
-
-document
-    .getElementById("deleteEditButton")
-    .addEventListener(
-        "click",
-        () => {
-
-            if (!editingRecordId)
-                return;
-
-
-            if (
-                confirm(
-                    "この記録を削除しますか？"
-                )
-            ) {
-
-                deleteRecord(
-                    editingRecordId
-                );
-
-            }
-
-        }
-    );
 
 
 /* ==========================================
-   Timer
-================================		========== */
-
-setInterval(
-    () => {
-
-        updateElapsed();
-
-    },
-    1000
-);
-
-
-
-/* ==========================================
-   Initialize
+   Hamburger
 ========================================== */
 
-function initialize() {
-
-    loadData();
-
-    renderAll();
-
-}
-
-/* ==========================================
-   Hamburger Menu
-========================================== */
 
 const menuButton =
     document.getElementById("menuButton");
 
+
 const sideMenu =
     document.getElementById("sideMenu");
+
 
 const menuOverlay =
     document.getElementById("menuOverlay");
 
 
-function toggleMenu() {
+
+function toggleMenu(){
 
     sideMenu.classList.toggle("open");
 
     menuOverlay.classList.toggle("open");
 
-    if (sideMenu.classList.contains("open")) {
-
-        menuButton.textContent = "×";
-
-    } else {
-
-        menuButton.textContent = "☰";
-
-    }
-
 }
 
 
-function closeMenu() {
-
-    sideMenu.classList.remove("open");
-
-    menuOverlay.classList.remove("open");
-
-    menuButton.textContent = "☰";
-
-}
-
-
-/* Menu button */
 
 menuButton.addEventListener(
     "click",
@@ -2577,41 +1295,62 @@ menuButton.addEventListener(
 );
 
 
-/* Overlay */
 
 menuOverlay.addEventListener(
     "click",
-    closeMenu
+    ()=>{
+
+        sideMenu.classList.remove("open");
+
+        menuOverlay.classList.remove("open");
+
+    }
 );
 
 
-/* Menu links */
 
-document
-    .querySelectorAll(".side-menu a")
-    .forEach(link => {
-
-        link.addEventListener(
-            "click",
-            closeMenu
-        );
-
-    });
 
 
 /* ==========================================
    Initialize
 ========================================== */
 
+
+function initialize(){
+
+    loadData();
+
+    renderAll();
+
+}
+
+
+
+setInterval(
+    updateElapsed,
+    1000
+);
+
+
+
 initialize();
+
+
+
 
 
 /* ==========================================
    Service Worker
 ========================================== */
 
-if ("serviceWorker" in navigator) {
 
-    navigator.serviceWorker.register("sw.js");
+if(
+    "serviceWorker"
+    in navigator
+){
+
+    navigator.serviceWorker.register(
+        "sw.js"
+    );
 
 }

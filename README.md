@@ -1,1 +1,0 @@
-# Lifolio-Note_ver.1.2

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0,
+                   maximum-scale=1.0, user-scalable=no">
+
+    <meta name="theme-color" content="#eaf8ff">
+
+    <title>Lifolio Note</title>
+
+    <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4CAF50">
+</head>
+
+<body>
+
+<div id="menuOverlay" class="menu-overlay"></div>
+
+<div class="app">
+
+<nav id="sideMenu" class="side-menu">
+
+    <a href="#">
+        🏠 Home
+    </a>
+
+    <a href="#currentCard">
+        ✏️ Today
+    </a>
+
+    <a href="#timelineSection">
+        🕒 Timeline
+    </a>
+
+    <a href="#weeklySection">
+        📅 Week
+    </a>
+
+    <a href="#monthlySection">
+        🗓 Month
+    </a>
+
+
+    <!-- Lifolio Brand -->
+    <div class="menu-brand">
+
+
+        <div class="menu-brand-name">
+            Lifolio
+        </div>
+
+        <div class="menu-brand-product">
+            NOTE
+        </div>
+
+        <p>毎日の時間を、そっと記録。</p>
+
+    </div>
+
+</nav>
+
+<!-- =========================
+     Header
+========================== -->
+
+<header class="app-header">
+
+    <div class="brand">
+
+        <div class="brand-icon">✏️</div>
+
+        <div class="main-brand">
+
+            <div class="main-brand-name">
+                Lifolio
+            </div>
+
+            <div class="main-brand-product">
+                NOTE
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <button id="menuButton" class="menu-button">
+        ☰
+    </button>
+
+</header>
+
+    <!-- =========================
+         Date Navigation
+    ========================== -->
+
+    <section class="date-section">
+
+        <button id="prevDate" class="date-arrow">
+            ‹
+        </button>
+
+        <div class="date-display">
+            <span id="dateLabel">今日</span>
+            <strong id="dateText">2026年7月29日</strong>
+        </div>
+
+        <button id="nextDate" class="date-arrow">
+            ›
+        </button>
+
+        <button id="todayButton" class="today-button">
+            今日
+        </button>
+
+    </section>
+
+
+    <!-- =========================
+         Main
+    ========================== -->
+
+
+    <main>
+
+
+        <!-- =========================
+             Summary
+        ========================== -->
+
+        <section class="summary-grid">
+
+            <div class="summary-card total-card">
+
+                <div class="summary-icon">
+                    ⏱️
+                </div>
+
+                <div class="summary-content">
+                    <span>今日の合計時間</span>
+                    <strong id="totalTime">00:00</strong>
+                </div>
+
+            </div>
+
+
+            <div class="summary-card record-card">
+
+                <div class="summary-icon">
+                    📝
+                </div>
+
+                <div class="summary-content">
+                    <span>記録した行動</span>
+                    <strong>
+                        <span id="recordCount">0</span>
+                        <small>件</small>
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             Current Activity
+        ========================== -->
+
+        <section id="currentCard" class="card current-card">
+
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">NOW</span>
+                    <h2>現在の行動</h2>
+                </div>
+
+                <span id="currentStatus" class="status-badge">
+                    待機中
+                </span>
+            </div>
+
+
+            <div id="currentEmpty" class="current-empty">
+
+                <div class="empty-icon">
+                    ○
+                </div>
+
+                <p>今は行動を記録していません</p>
+                <small>下からカテゴリを選んでスタートできます</small>
+
+            </div>
+
+
+            <div id="currentRunning" class="current-running hidden">
+
+                <div class="running-category">
+                    <span id="currentEmoji">📖</span>
+                    <strong id="currentName">勉強</strong>
+                </div>
+
+                <div class="running-time">
+
+                    <div>
+                        <span>開始</span>
+                        <strong id="startTime">--:--</strong>
+                    </div>
+
+                    <div>
+                        <span>経過</span>
+                        <strong id="elapsedTime">00:00:00</strong>
+                    </div>
+
+                </div>
+
+                <button id="stopButton" class="stop-button">
+                    行動を終了
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             Activity Selector
+        ========================== -->
+
+        <section class="card">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="eyebrow">RECORD</span>
+                    <h2>行動を記録</h2>
+                </div>
+
+                <button id="manageCategoryButton"
+                        class="text-button">
+                    編集
+                </button>
+
+            </div>
+
+
+            <div class="activity-selector">
+
+                <label for="categorySelect">
+                    カテゴリ
+                </label>
+
+                <div class="select-wrapper">
+
+                    <select id="categorySelect">
+                    </select>
+
+                    <span>⌄</span>
+
+                </div>
+
+            </div>
+
+
+            <button id="startButton"
+                    class="start-button">
+
+                <span>▶</span>
+                この行動を開始する
+
+            </button>
+
+        </section>
+
+
+        <!-- =========================
+             Chart
+        ========================== -->
+
+        <section class="card">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="eyebrow">TODAY</span>
+                    <h2>時間の内訳</h2>
+                </div>
+
+            </div>
+
+
+            <div class="chart-area">
+
+                <div class="donut-wrapper">
+
+                    <canvas id="timeChart"
+                            width="220"
+                            height="220">
+                    </canvas>
+
+                    <div class="chart-center">
+
+                        <strong id="chartTotal">
+                            00:00
+                        </strong>
+
+                        <span>
+                            合計
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div id="chartLegend"
+                     class="chart-legend">
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             Timeline
+        ========================== -->
+
+        <section id="timelineSection" class="card">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="eyebrow">TIMELINE</span>
+                    <h2>タイムライン</h2>
+                </div>
+
+                <span id="timelineCount"
+                      class="count-label">
+                    0件
+                </span>
+
+            </div>
+
+
+            <div id="timeline"
+                 class="timeline">
+            </div>
+
+
+            <button id="undoButton"
+                    class="undo-button hidden">
+
+                ↩︎ 直前の記録を取り消す
+
+            </button>
+
+        </section>
+
+
+        <!-- =========================
+             Weekly Record
+        ========================== -->
+
+        <section id="weeklySection" class="card">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="eyebrow">WEEK</span>
+                    <h2>週間記録</h2>
+                </div>
+
+            </div>
+
+
+            <div id="weeklyRecord"
+                 class="weekly-record">
+            </div>
+
+        </section><!-- =========================
+     Month
+========================== -->
+
+<section id="monthlySection" class="month-section">
+
+    <!-- =========================
+         Monthly Calendar
+    ========================== -->
+
+    <div class="month-calendar-card">
+
+        <!-- Month Header -->
+        <div class="section-heading month-heading">
+
+            <div>
+                <span class="section-eyebrow">MONTH</span>
+                <h2>月間記録</h2>
+            </div>
+
+        </div>
+
+
+        <div class="month-calendar-header">
+
+            <button
+                id="prevMonthButton"
+                class="month-nav-button"
+                type="button"
+                aria-label="前の月"
+            >
+                ‹
+            </button>
+
+
+            <div class="month-current">
+
+                <div id="monthYear">
+                    2026
+                </div>
+
+                <div id="monthName">
+                    July
+                </div>
+
+            </div>
+
+
+            <button
+                id="nextMonthButton"
+                class="month-nav-button"
+                type="button"
+                aria-label="次の月"
+            >
+                ›
+            </button>
+
+        </div>
+        <!-- Weekday -->
+        <div class="month-weekdays">
+
+            <span>MON</span>
+            <span>TUE</span>
+            <span>WED</span>
+            <span>THU</span>
+            <span>FRI</span>
+            <span>SAT</span>
+            <span>SUN</span>
+
+        </div>
+
+
+        <!-- Days will be generated by JavaScript -->
+        <div
+            id="monthDays"
+            class="month-days"
+        ></div>
+
+    </div>
+
+
+    <!-- =========================
+         Selected Day Record
+    ========================== -->
+
+    <div
+        id="selectedDayCard"
+        class="selected-day-card"
+        aria-hidden="true"
+    >
+
+        <div class="selected-day-header">
+
+            <div>
+
+                <span class="selected-day-label">
+                    DAILY RECORD
+                </span>
+
+                <h3 id="selectedDayTitle">
+                    7月7日の記録
+                </h3>
+
+            </div>
+
+
+            <button
+                id="closeDayRecord"
+                class="close-day-record"
+                type="button"
+                aria-label="記録を閉じる"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- Records will be inserted by JavaScript -->
+        <div
+            id="selectedDayRecords"
+            class="selected-day-records"
+        ></div>
+
+
+        <div class="selected-day-total">
+
+            <span>今日の合計</span>
+
+            <strong id="selectedDayTotal">
+                0h 00m
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         Monthly Total
+    ========================== -->
+
+    <div class="month-total-card">
+
+        <span class="month-total-label">
+            THIS MONTH
+        </span>
+
+        <div class="month-total-time">
+            <strong id="monthTotalHours">
+                0
+            </strong>
+
+            <span>h</span>
+
+            <strong id="monthTotalMinutes">
+                00
+            </strong>
+
+            <span>m</span>
+        </div>
+
+        <p>
+            今月の記録時間
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         Monthly Time Usage
+    ========================== -->
+
+    <div class="month-usage-card">
+
+        <div class="month-usage-heading">
+
+            <div>
+                <span class="section-eyebrow">
+                    TIME USAGE
+                </span>
+
+                <h3>
+                    7月の時間の使い方
+                </h3>
+            </div>
+
+        </div>
+
+
+        <!-- Test Tube Chart -->
+        <div
+            id="monthUsageTubes"
+            class="month-usage-tubes"
+        >
+
+            <!-- Tube 1 -->
+            <div class="usage-tube-item">
+
+                <div class="usage-tube">
+
+                    <div
+                        class="usage-tube-fill"
+                        style="height: 0%;"
+                    ></div>
+
+                </div>
+
+                <div class="usage-tube-category">
+                    📚
+                </div>
+
+                <div class="usage-tube-name">
+                    勉強
+                </div>
+
+                <strong class="usage-tube-time">
+                    0h
+                </strong>
+
+            </div>
+
+
+            <!-- Tube 2 -->
+            <div class="usage-tube-item">
+
+                <div class="usage-tube">
+
+                    <div
+                        class="usage-tube-fill"
+                        style="height: 0%;"
+                    ></div>
+
+                </div>
+
+                <div class="usage-tube-category">
+                    🎨
+                </div>
+
+                <div class="usage-tube-name">
+                    創作
+                </div>
+
+                <strong class="usage-tube-time">
+                    0h
+                </strong>
+
+            </div>
+
+
+            <!-- Tube 3 -->
+            <div class="usage-tube-item">
+
+                <div class="usage-tube">
+
+                    <div
+                        class="usage-tube-fill"
+                        style="height: 0%;"
+                    ></div>
+
+                </div>
+
+                <div class="usage-tube-category">
+                    🎤
+                </div>
+
+                <div class="usage-tube-name">
+                    配信
+                </div>
+
+                <strong class="usage-tube-time">
+                    0h
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+    <div id="monthlyCalendar"></div>
+
+    <div id="monthlyRanking"></div>
+
+    </div>
+
+</section>
+
+    </main>
+
+<!-- =========================
+     Lifolio End Card
+========================== -->
+
+<section class="lifolio-end-card">
+
+    <div class="end-card-line"></div>
+
+    <div class="end-card-name">
+        Lifolio
+    </div>
+
+    <div class="end-card-product">
+        NOTE
+    </div>
+
+    <p class="end-card-copy">
+        毎日の時間を、そっと記録。
+    </p>
+
+    <div class="end-card-series">
+        LIFOLIO SERIES 01
+    </div>
+
+</section>
+
+
+    <!-- =========================
+         Category Modal
+    ========================== -->
+
+    <div id="categoryModal"
+         class="modal hidden">
+
+        <div class="modal-overlay"
+             id="modalOverlay">
+        </div>
+
+        <div class="modal-sheet">
+
+            <div class="modal-header">
+
+                <h2>カテゴリ管理</h2>
+
+                <button id="closeCategoryModal"
+                        class="close-button">
+                    ×
+                </button>
+
+            </div>
+
+
+            <div id="categoryList"
+                 class="category-list">
+            </div>
+
+
+            <button id="addCategoryButton"
+                    class="add-category-button">
+
+                ＋ 新しいカテゴリを追加
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         Edit Modal
+    ========================== -->
+
+    <div id="editModal"
+         class="modal hidden">
+
+        <div class="modal-overlay"
+             id="editOverlay">
+        </div>
+
+        <div class="modal-sheet">
+
+            <div class="modal-header">
+
+                <h2>記録を編集</h2>
+
+                <button id="closeEditModal"
+                        class="close-button">
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="editCategory">
+                    カテゴリ
+                </label>
+
+                <select id="editCategory">
+                </select>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="editStart">
+                        開始
+                    </label>
+
+                    <input id="editStart"
+                           type="time">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="editEnd">
+                        終了
+                    </label>
+
+                    <input id="editEnd"
+                           type="time">
+
+                </div>
+
+            </div>
+
+
+            <button id="saveEditButton"
+                    class="start-button">
+
+                保存する
+
+            </button>
+
+
+            <button id="deleteEditButton"
+                    class="delete-record-button">
+
+                🗑️ この記録を削除
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         Category Edit Modal
+    ========================== -->
+
+    <div id="categoryEditModal"
+         class="modal hidden">
+
+        <div class="modal-overlay"
+             id="categoryEditOverlay">
+        </div>
+
+        <div class="modal-sheet">
+
+            <div class="modal-header">
+
+                <h2 id="categoryEditTitle">
+                    カテゴリを追加
+                </h2>
+
+                <button id="closeCategoryEditModal"
+                        class="close-button">
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="categoryEmoji">
+                    絵文字
+                </label>
+
+                <input id="categoryEmoji"
+                       type="text"
+                       maxlength="2"
+                       placeholder="📖">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="categoryName">
+                    カテゴリ名
+                </label>
+
+                <input id="categoryName"
+                       type="text"
+                       maxlength="20"
+                       placeholder="勉強">
+
+            </div>
+
+
+            <button id="saveCategoryButton"
+                    class="start-button">
+
+                保存する
+
+            </button>
+
+
+            <button id="deleteCategoryButton"
+                    class="delete-record-button hidden">
+
+                🗑️ このカテゴリを削除
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</div>
+
+</body>
+</html>

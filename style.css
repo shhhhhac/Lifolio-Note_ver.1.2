@@ -3123,3 +3123,29 @@ body {
 .month-heading h2 {
     color: var(--text-main);
 }
+/* ==========================================
+   Month Section Heading Fix
+========================================== */
+
+.month-heading .eyebrow {
+    color: var(--primary-dark);
+    font-size: .62rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    margin-bottom: 4px;
+}
+
+
+.month-heading h2 {
+
+    font-size: 1.12rem;
+
+    font-weight: 700;
+
+    color: var(--text);
+
+    letter-spacing: -.02em;
+
+    margin-top: 0;
+
+}

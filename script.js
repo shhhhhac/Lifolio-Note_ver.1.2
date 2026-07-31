@@ -1294,7 +1294,26 @@ menuButton.addEventListener(
     toggleMenu
 );
 
+// メニュー項目を押したら閉じる
 
+const menuLinks =
+    document.querySelectorAll("#sideMenu a");
+
+
+menuLinks.forEach(link => {
+
+    link.addEventListener(
+        "click",
+        () => {
+
+            sideMenu.classList.remove("open");
+
+            menuOverlay.classList.remove("open");
+
+        }
+    );
+
+});
 
 menuOverlay.addEventListener(
     "click",

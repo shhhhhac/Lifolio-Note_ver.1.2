@@ -1157,7 +1157,7 @@ function renderAll(){
 
     renderTimeline();
 
-    renderWeekly();
+    //renderWeekly();
 
     renderMonthlyCalendar();
 

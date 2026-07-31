@@ -1285,8 +1285,18 @@ function toggleMenu(){
 
     menuOverlay.classList.toggle("open");
 
-}
 
+    if(sideMenu.classList.contains("open")){
+
+        menuButton.textContent = "×";
+
+    }else{
+
+        menuButton.textContent = "☰";
+
+    }
+
+}
 
 
 menuButton.addEventListener(
